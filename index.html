@@ -66,7 +66,7 @@
         .glass-table th { background: rgba(0,0,0,0.5); padding: 15px; text-align: left; }
         .glass-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- AREA MASCOT KOMIK IMUT --- */
+        /* --- AREA MASCOT KOMIK (MATAHARI/AWAN) --- */
         .comic-mascot-wrapper {
             position: fixed;
             bottom: 30px;
@@ -110,15 +110,15 @@
             border-color: #fff transparent; display: block; width: 0;
         }
 
-        /* CONTAINER KUCING IMUT */
-        .cat-container {
-            width: 180px; /* Sedikit diperbesar agar lebih jelas imutnya */
+        /* CONTAINER ICON CUACA */
+        .weather-mascot-container {
+            width: 180px;
             height: auto;
             animation: softBounce 3s ease-in-out infinite;
         }
 
-        /* Gambar Kucing */
-        .cat-img {
+        /* Gambar Icon */
+        .weather-mascot-img {
             width: 100%; height: auto;
             /* Bayangan komik */
             filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.5));
@@ -133,7 +133,7 @@
         @media (max-width: 768px) {
             body { flex-direction: column; overflow: auto; height: auto; }
             .left-panel, .right-panel { width: 100%; height: auto; }
-            .cat-container { width: 140px; }
+            .weather-mascot-container { width: 140px; }
             .comic-bubble { font-size: 0.9rem; max-width: 220px; }
         }
     </style>
@@ -171,11 +171,11 @@
 
             <div class="comic-mascot-wrapper">
                 <div class="comic-bubble" id="mascot-text">
-                    Meong! Menunggu data...
+                    Memuat data cuaca...
                 </div>
                 
-                <div class="cat-container">
-                    <img id="cat-img" src="https://cdn-icons-png.flaticon.com/512/1864/1864499.png" alt="Cat Mascot" class="cat-img">
+                <div class="weather-mascot-container">
+                    <img id="weather-mascot-img" src="https://cdn-icons-png.flaticon.com/512/869/869869.png" alt="Weather Mascot" class="weather-mascot-img">
                 </div>
             </div>
         </div>
@@ -199,14 +199,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- ASSET LINK BARU (KUCING SUPER IMUT/KAWAII) ---
+        // --- ASSET LINK BARU (MATAHARI & AWAN HUJAN) ---
         
-        // KUCING CERAH (Tidur Imut Zzz)
-        const catSunny = "https://cdn-icons-png.flaticon.com/512/1864/1864499.png";
-        // KUCING HUJAN (Sedih Pegang Payung)
-        const catRainy = "https://cdn-icons-png.flaticon.com/512/3249/3249854.png";
-        // KUCING BADAI (Kaget/Melotot Lucu)
-        const catStormy = "https://cdn-icons-png.flaticon.com/512/7563/7563699.png";
+        // Ikon Matahari Cerah
+        const iconSun = "https://cdn-icons-png.flaticon.com/512/869/869869.png";
+        // Ikon Awan Hujan (Dipakai untuk semua jenis hujan)
+        const iconRain = "https://cdn-icons-png.flaticon.com/512/1146/1146858.png";
 
         // Background HD (Tetap sama)
         const bgCerah = "https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1920&auto=format&fit=crop"; 
@@ -222,32 +220,32 @@
                 let kondisi = data.cuaca.trim();
                 document.getElementById('m-cuaca').innerText = kondisi;
 
-                // --- LOGIKA KUCING IMUT ---
+                // --- LOGIKA MASCOT CUACA ---
                 let urlBg = bgCerah;
-                let text = "Cuaca Aman Meong.";
+                let text = "Cuaca Aman.";
                 let icon = "☀️";
-                let catUrl = catSunny;
+                let mascotUrl = iconSun;
                 
                 if (kondisi.includes("Berawan") || kondisi.includes("Cerah")) {
-                    // CERAH: Kucing Tidur Imut
+                    // CERAH: Matahari
                     urlBg = bgCerah;
-                    text = "Nyam nyam... Cerah sekali. Aku lanjut tidur ya. Zzz...";
+                    text = "Hari yang cerah! Waktunya menikmati sinar matahari.";
                     icon = "😎";
-                    catUrl = catSunny;
+                    mascotUrl = iconSun;
                 } 
                 else if (kondisi.includes("Ringan") || kondisi.includes("Sedang")) {
-                    // HUJAN: Kucing Payung Sedih
+                    // HUJAN: Awan Hujan
                     urlBg = bgHujan;
-                    text = "Meong... Hujan turun. Aku jadi basah sedikit...";
+                    text = "Sedang turun hujan. Jangan lupa bawa payung!";
                     icon = "☔";
-                    catUrl = catRainy;
+                    mascotUrl = iconRain;
                 } 
                 else if (kondisi.includes("Lebat") || kondisi.includes("ekstrem")) {
-                    // BADAI: Kucing Kaget Lucu
+                    // BADAI: Awan Hujan (Teks lebih serius)
                     urlBg = bgBadai;
-                    text = "HAAH?! Suara petirnya keras sekali! Aku kaget!";
+                    text = "Waspada! Hujan lebat dan potensi badai!";
                     icon = "⚡";
-                    catUrl = catStormy;
+                    mascotUrl = iconRain; // Tetap pakai awan hujan
                 }
 
                 // Update Tampilan
@@ -255,7 +253,7 @@
                 document.getElementById('weather-icon').innerText = icon;
                 
                 // Update Mascot & Bubble
-                document.getElementById('cat-img').src = catUrl;
+                document.getElementById('weather-mascot-img').src = mascotUrl;
                 const bubble = document.getElementById('mascot-text');
                 bubble.innerText = text;
                 bubble.style.transform = "scale(1.1)";
