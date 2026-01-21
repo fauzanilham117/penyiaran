@@ -4,76 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Weather IoT</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
     
     <style>
+        /* --- RESET --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body { 
             font-family: 'Quicksand', sans-serif;
-            height: 100vh;
-            overflow: hidden;
-            color: white;
+            height: 100vh; overflow: hidden; color: white;
             background-color: #111;
         }
 
-        /* --- 1. BACKGROUND LAYER (FOKUS UTAMA) --- */
+        /* --- BACKGROUND LAYER (Foto HD Stabil) --- */
         #bg-layer {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            /* Foto Default (Loading) */
-            background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            transition: background-image 1s ease-in-out; /* Perpindahan halus */
-            
-            /* Animasi Zoom Perlahan (Cinematic) */
-            animation: cinematicZoom 30s infinite alternate;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background-size: cover; background-position: center;
+            transition: background-image 1s ease-in-out;
+            animation: cinematicZoom 40s infinite alternate;
         }
-
-        /* Lapisan Hitam Transparan (Agar teks terbaca) */
         #bg-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* Gelap 50% */
-            z-index: 0;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); z-index: 0; pointer-events: none;
         }
-
-        @keyframes cinematicZoom {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.15); }
-        }
+        @keyframes cinematicZoom { 0% { transform: scale(1); } 100% { transform: scale(1.2); } }
 
         /* --- LAYOUT PANEL --- */
-        .container {
-            position: relative; z-index: 1;
-            display: flex; width: 100%; height: 100%;
-        }
+        .container { position: relative; z-index: 1; display: flex; width: 100%; height: 100%; }
 
-        /* Panel Kiri (Kaca Buram) */
+        /* Panel Kiri */
         .left-panel {
             width: 40%; padding: 40px; display: flex; flex-direction: column; justify-content: center;
-            /* Efek Glassmorphism yang Rapi */
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
             border-right: 1px solid rgba(255,255,255,0.1);
         }
-
         .header-title {
             font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 40px;
             text-transform: uppercase; border-bottom: 2px solid rgba(255,255,255,0.3);
             padding-bottom: 15px; font-weight: bold;
         }
-
         .label { font-size: 0.9rem; opacity: 0.8; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;}
         .big-number {
             font-family: Arial, sans-serif; font-size: 6rem; font-weight: bold;
             text-shadow: 0 5px 15px rgba(0,0,0,0.5); line-height: 1;
         }
         .unit { font-size: 2rem; font-weight: normal; margin-left: 10px;}
-
         .status-pill {
             display: inline-flex; align-items: center; gap: 10px;
             padding: 10px 25px; background: rgba(0,0,0,0.3);
@@ -83,7 +59,6 @@
 
         /* Panel Kanan */
         .right-panel { width: 60%; padding: 40px; overflow-y: auto; position: relative; }
-
         .glass-table {
             width: 100%; border-collapse: collapse; background: rgba(0, 0, 0, 0.3);
             border-radius: 15px; overflow: hidden;
@@ -91,38 +66,80 @@
         .glass-table th { background: rgba(0,0,0,0.5); padding: 15px; text-align: left; }
         .glass-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- MASCOT AREA (Lingkaran) --- */
-        .mascot-wrapper {
-            position: fixed; bottom: 30px; right: 40px;
-            display: flex; flex-direction: column; align-items: center;
+        /* --- AREA MASCOT KOMIK --- */
+        .comic-mascot-wrapper {
+            position: fixed;
+            bottom: 30px;
+            right: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            z-index: 50;
+            pointer-events: none; /* Agar klik tembus */
         }
-        .chat-bubble {
-            background: white; color: #333; padding: 15px 25px;
-            border-radius: 20px 20px 0 20px; font-weight: bold;
-            margin-bottom: 15px; max-width: 250px; text-align: center;
-            border: 3px solid #fff;
+
+        /* GAYA BALON KOMIK */
+        .comic-bubble {
+            background: #fff;
+            color: #000;
+            padding: 15px 25px;
+            /* Border Hitam Tebal ala Komik */
+            border: 4px solid #000;
+            border-radius: 30px;
+            /* Font Komik */
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
+            font-size: 1.1rem;
+            max-width: 280px;
+            text-align: center;
+            position: relative;
+            /* Bayangan Keras ala Pop-Art */
+            box-shadow: 5px 5px 0px rgba(0,0,0,1);
+            margin-bottom: 20px;
+            transition: transform 0.2s ease;
         }
-        .robot-frame {
-            width: 150px; height: 150px;
-            border-radius: 50%;
-            border: 5px solid white;
-            background: white;
-            overflow: hidden; /* Memotong gambar jadi bulat */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+        /* Ekor Balon Komik (Segitiga) */
+        .comic-bubble::after {
+            content: ''; position: absolute;
+            bottom: -20px; right: 50px;
+            border-width: 20px 20px 0; border-style: solid;
+            border-color: #000 transparent; display: block; width: 0;
         }
-        .mascot-img { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Ikon Tambahan */
-        .icon-float {
-            position: absolute; font-size: 4rem; top: -30px; right: -10px;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
-            animation: float 2s infinite ease-in-out;
+        /* Penutup putih dalam ekor */
+        .comic-bubble::before {
+            content: ''; position: absolute;
+            bottom: -14px; right: 54px; z-index: 1;
+            border-width: 16px 16px 0; border-style: solid;
+            border-color: #fff transparent; display: block; width: 0;
         }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+        /* CONTAINER KUCING 2D */
+        .cat-container {
+            width: 160px;
+            height: auto;
+            /* Animasi Mengayun Halus */
+            animation: softBounce 3s ease-in-out infinite;
+        }
+
+        /* Gambar Kucing */
+        .cat-img {
+            width: 100%; height: auto;
+            /* Bayangan komik pada kucing */
+            filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.5));
+            transition: all 0.5s ease;
+        }
+
+        @keyframes softBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
 
         @media (max-width: 768px) {
             body { flex-direction: column; overflow: auto; height: auto; }
             .left-panel, .right-panel { width: 100%; height: auto; }
+            .cat-container { width: 130px; }
+            .comic-bubble { font-size: 0.9rem; max-width: 220px; }
         }
     </style>
 </head>
@@ -133,7 +150,7 @@
 
     <div class="container">
         <div class="left-panel">
-            <div class="header-title">>> MONITOR IOT</div>
+            <div class="header-title">>> MONITOR CUACA</div>
             <div style="margin-bottom: 30px;">
                 <div class="label">Curah Hujan</div>
                 <div class="big-number">
@@ -157,10 +174,13 @@
                 <tbody id="tabel-body"><tr><td colspan="3">Menunggu data...</td></tr></tbody>
             </table>
 
-            <div class="mascot-wrapper">
-                <div class="chat-bubble" id="mascot-text">Halo! Sistem siap.</div>
-                <div class="robot-frame" style="position: relative;">
-                    <div id="acc-icon" class="icon-float"></div> <img src="./mascot.jpg" alt="Mascot" class="mascot-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4712/4712038.png'">
+            <div class="comic-mascot-wrapper">
+                <div class="comic-bubble" id="mascot-text">
+                    Meong! Menunggu data cuaca...
+                </div>
+                
+                <div class="cat-container">
+                    <img id="cat-img" src="https://cdn-icons-png.flaticon.com/512/616/616430.png" alt="Cat Mascot" class="cat-img">
                 </div>
             </div>
         </div>
@@ -184,10 +204,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- DATABASE FOTO BACKGROUND (LINK STABIL UNSPLASH) ---
-        const bgCerah = "https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1920&auto=format&fit=crop"; // Langit Biru
-        const bgHujan = "https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?q=80&w=1920&auto=format&fit=crop"; // Kaca Basah
-        const bgBadai = "https://images.unsplash.com/photo-1605727216801-e27ce1d0cc28?q=80&w=1920&auto=format&fit=crop"; // Petir Gelap
+        // --- ASSET LINK (Gambar Kucing 2D & Background HD) ---
+        // Sumber: Flaticon (Kucing) & Unsplash (Background) - Link Stabil
+
+        // KUCING CERAH (Tidur Santai)
+        const catSunny = "https://cdn-icons-png.flaticon.com/512/616/616430.png";
+        // KUCING HUJAN (Pakai Payung Daun)
+        const catRainy = "https://cdn-icons-png.flaticon.com/512/616/616543.png";
+        // KUCING BADAI (Kaget/Takut)
+        const catStormy = "https://cdn-icons-png.flaticon.com/512/1864/1864514.png";
+
+        const bgCerah = "https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1920&auto=format&fit=crop"; 
+        const bgHujan = "https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?q=80&w=1920&auto=format&fit=crop"; 
+        const bgBadai = "https://images.unsplash.com/photo-1605727216801-e27ce1d0cc28?q=80&w=1920&auto=format&fit=crop";
 
         onValue(ref(db, 'monitoring'), (snapshot) => {
             const data = snapshot.val();
@@ -198,42 +227,49 @@
                 let kondisi = data.cuaca.trim();
                 document.getElementById('m-cuaca').innerText = kondisi;
 
-                // LOGIKA GANTI BACKGROUND
+                // --- LOGIKA KUCING KOMIK ---
                 let urlBg = bgCerah;
-                let text = "Cuaca Aman.";
+                let text = "Cuaca Aman Meong.";
                 let icon = "☀️";
-                let bubbleColor = "#00B4DB";
-
+                let catUrl = catSunny;
+                
                 if (kondisi.includes("Berawan") || kondisi.includes("Cerah")) {
+                    // CERAH: Kucing Tidur
                     urlBg = bgCerah;
-                    text = "Langit Cerah! Silakan berjemur.";
+                    text = "Hoaam... Cerah sekali. Waktunya tidur siang. Zzz...";
                     icon = "😎";
-                    bubbleColor = "#00B4DB";
+                    catUrl = catSunny;
                 } 
                 else if (kondisi.includes("Ringan") || kondisi.includes("Sedang")) {
+                    // HUJAN: Kucing Payungan
                     urlBg = bgHujan;
-                    text = "Hujan Turun... Bawa payung ya!";
+                    text = "Meong! Hujan turun. Untung aku punya payung daun!";
                     icon = "☔";
-                    bubbleColor = "#667eea";
+                    catUrl = catRainy;
                 } 
                 else if (kondisi.includes("Lebat") || kondisi.includes("ekstrem")) {
+                    // BADAI: Kucing Panik
                     urlBg = bgBadai;
-                    text = "BADAI! Mohon tetap di dalam ruangan.";
+                    text = "MIAW!! Badai menakutkan! Aku sembunyi dulu!";
                     icon = "⚡";
-                    bubbleColor = "#ff4d4d";
+                    catUrl = catStormy;
                 }
 
-                // Terapkan Perubahan Background
+                // Update Tampilan
                 document.getElementById('bg-layer').style.backgroundImage = `url('${urlBg}')`;
-                
-                // Terapkan Perubahan Mascot
-                document.getElementById('mascot-text').innerText = text;
-                document.getElementById('mascot-text').style.borderColor = bubbleColor;
-                document.getElementById('acc-icon').innerText = icon;
                 document.getElementById('weather-icon').innerText = icon;
+                
+                // Update Mascot & Bubble
+                document.getElementById('cat-img').src = catUrl;
+                const bubble = document.getElementById('mascot-text');
+                bubble.innerText = text;
+                // Efek pop kecil saat teks berubah
+                bubble.style.transform = "scale(1.1)";
+                setTimeout(() => { bubble.style.transform = "scale(1)"; }, 200);
             }
         });
 
+        // TABEL (Tetap Sama)
         onValue(ref(db, 'riwayat_hujan'), (snapshot) => {
             const data = snapshot.val();
             const tbody = document.getElementById('tabel-body');
