@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Weather IoT</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- RESET --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Quicksand', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+            display: flex;
+            /* BACKGROUND GRADASI ANIMASI (Tanpa Gambar Berat) */
+            background: linear-gradient(-45deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        /* Animasi Latar Belakang Bergerak Halus */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- LAYOUT --- */
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.2); /* Overlay tipis */
+        }
+
+        /* --- PANEL KIRI: MONITOR --- */
+        .left-panel {
+            width: 40%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify_content: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px); /* Efek Kaca Kuat */
+            border-right: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+
+        .header-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+        }
+
+        .metric-box {
+            margin-bottom: 30px;
+        }
+
+        .label { 
+            font-size: 0.9rem; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase; 
+        }
+
+        .big-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            font-weight: 700;
+            margin: 5px 0;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            line-height: 1;
+        }
+
+        .unit { font-size: 1.5rem; font-family: 'Quicksand', sans-serif; }
+
+        .status-pill {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50px;
+            font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.4);
+            margin-top: 10px;
+            display: flex; align-items: center; gap: 10px;
+            width: fit-content;
+        }
+
+        /* --- PANEL KANAN: TABEL --- */
+        .right-panel {
+            width: 60%;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        h2 { margin-bottom: 20px; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+
+        .glass-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .glass-table th { background: rgba(0,0,0,0.3); padding: 15px; text-align: left; }
+        .glass-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        
+        /* --- MASCOT AREA (YANG PASTI MUNCUL) --- */
+        .mascot-wrapper {
+            position: fixed;
+            bottom: 30px; right: 30px;
+            display: flex; flex-direction: column; align-items: flex-end;
+            z-index: 10;
+            pointer-events: none; /* Agar tidak menghalangi klik */
+        }
+
+        .chat-bubble {
+            background: white; color: #333;
+            padding: 15px 25px;
+            border-radius: 20px 20px 0 20px;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+            max-width: 250px; text-align: right;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.95rem;
+        }
+
+        /* Mascot menggunakan Emoji Besar (Pasti Muncul) */
+        .mascot-emoji {
+            font-size: 8rem; /* Ukuran Besar */
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.4));
+            animation: bounce 2s infinite ease-in-out;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        /* Animasi Robot Melayang */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            body { flex-direction: column; overflow: auto; height: auto; }
+            .left-panel, .right-panel { width: 100%; height: auto; }
+            .mascot-emoji { font-size: 5rem; }
+            .chat-bubble { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="left-panel">
+            <div class="header-title">>> SYSTEM MONITOR</div>
+            
+            <div class="metric-box">
+                <div class="label">CURAH HUJAN HARI INI</div>
+                <div class="big-number">
+                    <span id="m-hujan">0.0</span><span class="unit" style="font-size:2rem">mm</span>
+                </div>
+            </div>
+
+            <div class="metric-box">
+                <div class="label">STATUS SENSOR</div>
+                <div class="status-pill">
+                    <span id="weather-icon">📡</span>
+                    <span id="m-cuaca">Menunggu Data...</span>
+                </div>
+            </div>
+            
+            <div style="margin-top:auto; font-size:0.9rem; opacity:0.6;">
+                Waktu Update: <span id="m-waktu">--:--</span>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <h2>Laporan Harian</h2>
+            <table class="glass-table">
+                <thead>
+                    <tr>
+                        <th>Waktu</th>
+                        <th>Hujan</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel-body">
+                    <tr><td colspan="3">Menunggu koneksi...</td></tr>
+                </tbody>
+            </table>
+
+            <div class="mascot-wrapper">
+                <div class="chat-bubble" id="mascot-text">
+                    Halo! Sistem siap memantau.
+                </div>
+                <div class="mascot-emoji" id="mascot-face">🤖</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAbdQWZsyZNssxvZ8Ja8syDMefHyIOG4xk",
+            authDomain: "pengukuran-curah-hujan-5b9aa.firebaseapp.com",
+            databaseURL: "https://pengukuran-curah-hujan-5b9aa-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "pengukuran-curah-hujan-5b9aa",
+            storageBucket: "pengukuran-curah-hujan-5b9aa.firebasestorage.app",
+            messagingSenderId: "1052357974003",
+            appId: "1:1052357974003:web:a482180e36801943c42486",
+            measurementId: "G-WYWDG0WR90"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // 1. MONITORING REALTIME
+        onValue(ref(db, 'monitoring'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                document.getElementById('m-waktu').innerText = data.waktu;
+                document.getElementById('m-hujan').innerText = data.hujan_hari_ini;
+                
+                let kondisi = data.cuaca.trim();
+                document.getElementById('m-cuaca').innerText = kondisi;
+
+                // --- LOGIKA MASCOT & BACKGROUND ---
+                let mascotEmoji = "🤖";
+                let mascotText = "Sistem berjalan normal.";
+                let bgGradient = "linear-gradient(-45deg, #1a2a6c, #b21f1f, #fdbb2d)"; // Default (Sore/Malam)
+
+                if (kondisi.includes("Berawan") || kondisi.includes("Cerah")) {
+                    mascotEmoji = "😎"; // Robot Keren
+                    mascotText = "Cuaca cerah! Langit bersih.";
+                    bgGradient = "linear-gradient(-45deg, #2980B9, #6DD5FA, #FFFFFF)"; // Biru Langit
+                } 
+                else if (kondisi.includes("Ringan") || kondisi.includes("Sedang")) {
+                    mascotEmoji = "☔"; // Payung
+                    mascotText = "Hujan turun! Jangan lupa payung.";
+                    bgGradient = "linear-gradient(-45deg, #373B44, #4286f4)"; // Biru Kelabu
+                } 
+                else if (kondisi.includes("Lebat") || kondisi.includes("ekstrem")) {
+                    mascotEmoji = "😱"; // Robot Panik
+                    mascotText = "AWAS! Hujan sangat lebat! Bahaya!";
+                    bgGradient = "linear-gradient(-45deg, #232526, #414345)"; // Gelap Badai
+                }
+
+                // Update UI
+                document.body.style.background = bgGradient;
+                document.body.style.backgroundSize = "400% 400%"; // Agar animasi tetap jalan
+                
+                document.getElementById('mascot-face').innerText = mascotEmoji;
+                document.getElementById('mascot-text').innerText = mascotText;
+                document.getElementById('weather-icon').innerText = mascotEmoji;
+            }
+        });
+
+        // 2. TABEL HARIAN
+        onValue(ref(db, 'riwayat_hujan'), (snapshot) => {
+            const data = snapshot.val();
+            const tbody = document.getElementById('tabel-body');
+            tbody.innerHTML = ""; 
+
+            if (data) {
+                let dataArray = Object.keys(data).map(k => data[k]).reverse();
+                dataArray.forEach(item => {
+                    let row = `
+                    <tr>
+                        <td>${item.waktu}</td>
+                        <td style="font-weight:bold;">${item.curah_hujan_hari_ini} mm</td>
+                        <td>${item.cuaca}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            } else {
+                tbody.innerHTML = "<tr><td colspan='3' style='text-align:center;'>Belum ada data.</td></tr>";
+            }
+        });
+    </script>
+</body>
+</html>
