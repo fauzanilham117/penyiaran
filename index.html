@@ -66,7 +66,7 @@
         .glass-table th { background: rgba(0,0,0,0.5); padding: 15px; text-align: left; }
         .glass-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- AREA MASCOT KOMIK --- */
+        /* --- AREA MASCOT KOMIK IMUT --- */
         .comic-mascot-wrapper {
             position: fixed;
             bottom: 30px;
@@ -75,7 +75,7 @@
             flex-direction: column;
             align-items: flex-end;
             z-index: 50;
-            pointer-events: none; /* Agar klik tembus */
+            pointer-events: none; 
         }
 
         /* GAYA BALON KOMIK */
@@ -83,62 +83,57 @@
             background: #fff;
             color: #000;
             padding: 15px 25px;
-            /* Border Hitam Tebal ala Komik */
             border: 4px solid #000;
             border-radius: 30px;
-            /* Font Komik */
             font-family: 'Comic Neue', cursive;
             font-weight: bold;
             font-size: 1.1rem;
             max-width: 280px;
             text-align: center;
             position: relative;
-            /* Bayangan Keras ala Pop-Art */
             box-shadow: 5px 5px 0px rgba(0,0,0,1);
             margin-bottom: 20px;
             transition: transform 0.2s ease;
         }
 
-        /* Ekor Balon Komik (Segitiga) */
+        /* Ekor Balon Komik */
         .comic-bubble::after {
             content: ''; position: absolute;
-            bottom: -20px; right: 50px;
+            bottom: -20px; right: 60px;
             border-width: 20px 20px 0; border-style: solid;
             border-color: #000 transparent; display: block; width: 0;
         }
-        /* Penutup putih dalam ekor */
         .comic-bubble::before {
             content: ''; position: absolute;
-            bottom: -14px; right: 54px; z-index: 1;
+            bottom: -14px; right: 64px; z-index: 1;
             border-width: 16px 16px 0; border-style: solid;
             border-color: #fff transparent; display: block; width: 0;
         }
 
-        /* CONTAINER KUCING 2D */
+        /* CONTAINER KUCING IMUT */
         .cat-container {
-            width: 160px;
+            width: 180px; /* Sedikit diperbesar agar lebih jelas imutnya */
             height: auto;
-            /* Animasi Mengayun Halus */
             animation: softBounce 3s ease-in-out infinite;
         }
 
         /* Gambar Kucing */
         .cat-img {
             width: 100%; height: auto;
-            /* Bayangan komik pada kucing */
+            /* Bayangan komik */
             filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.5));
             transition: all 0.5s ease;
         }
 
         @keyframes softBounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
         }
 
         @media (max-width: 768px) {
             body { flex-direction: column; overflow: auto; height: auto; }
             .left-panel, .right-panel { width: 100%; height: auto; }
-            .cat-container { width: 130px; }
+            .cat-container { width: 140px; }
             .comic-bubble { font-size: 0.9rem; max-width: 220px; }
         }
     </style>
@@ -176,11 +171,11 @@
 
             <div class="comic-mascot-wrapper">
                 <div class="comic-bubble" id="mascot-text">
-                    Meong! Menunggu data cuaca...
+                    Meong! Menunggu data...
                 </div>
                 
                 <div class="cat-container">
-                    <img id="cat-img" src="https://cdn-icons-png.flaticon.com/512/616/616430.png" alt="Cat Mascot" class="cat-img">
+                    <img id="cat-img" src="https://cdn-icons-png.flaticon.com/512/1864/1864499.png" alt="Cat Mascot" class="cat-img">
                 </div>
             </div>
         </div>
@@ -204,16 +199,16 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- ASSET LINK (Gambar Kucing 2D & Background HD) ---
-        // Sumber: Flaticon (Kucing) & Unsplash (Background) - Link Stabil
+        // --- ASSET LINK BARU (KUCING SUPER IMUT/KAWAII) ---
+        
+        // KUCING CERAH (Tidur Imut Zzz)
+        const catSunny = "https://cdn-icons-png.flaticon.com/512/1864/1864499.png";
+        // KUCING HUJAN (Sedih Pegang Payung)
+        const catRainy = "https://cdn-icons-png.flaticon.com/512/3249/3249854.png";
+        // KUCING BADAI (Kaget/Melotot Lucu)
+        const catStormy = "https://cdn-icons-png.flaticon.com/512/7563/7563699.png";
 
-        // KUCING CERAH (Tidur Santai)
-        const catSunny = "https://cdn-icons-png.flaticon.com/512/616/616430.png";
-        // KUCING HUJAN (Pakai Payung Daun)
-        const catRainy = "https://cdn-icons-png.flaticon.com/512/616/616543.png";
-        // KUCING BADAI (Kaget/Takut)
-        const catStormy = "https://cdn-icons-png.flaticon.com/512/1864/1864514.png";
-
+        // Background HD (Tetap sama)
         const bgCerah = "https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1920&auto=format&fit=crop"; 
         const bgHujan = "https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?q=80&w=1920&auto=format&fit=crop"; 
         const bgBadai = "https://images.unsplash.com/photo-1605727216801-e27ce1d0cc28?q=80&w=1920&auto=format&fit=crop";
@@ -227,30 +222,30 @@
                 let kondisi = data.cuaca.trim();
                 document.getElementById('m-cuaca').innerText = kondisi;
 
-                // --- LOGIKA KUCING KOMIK ---
+                // --- LOGIKA KUCING IMUT ---
                 let urlBg = bgCerah;
                 let text = "Cuaca Aman Meong.";
                 let icon = "☀️";
                 let catUrl = catSunny;
                 
                 if (kondisi.includes("Berawan") || kondisi.includes("Cerah")) {
-                    // CERAH: Kucing Tidur
+                    // CERAH: Kucing Tidur Imut
                     urlBg = bgCerah;
-                    text = "Hoaam... Cerah sekali. Waktunya tidur siang. Zzz...";
+                    text = "Nyam nyam... Cerah sekali. Aku lanjut tidur ya. Zzz...";
                     icon = "😎";
                     catUrl = catSunny;
                 } 
                 else if (kondisi.includes("Ringan") || kondisi.includes("Sedang")) {
-                    // HUJAN: Kucing Payungan
+                    // HUJAN: Kucing Payung Sedih
                     urlBg = bgHujan;
-                    text = "Meong! Hujan turun. Untung aku punya payung daun!";
+                    text = "Meong... Hujan turun. Aku jadi basah sedikit...";
                     icon = "☔";
                     catUrl = catRainy;
                 } 
                 else if (kondisi.includes("Lebat") || kondisi.includes("ekstrem")) {
-                    // BADAI: Kucing Panik
+                    // BADAI: Kucing Kaget Lucu
                     urlBg = bgBadai;
-                    text = "MIAW!! Badai menakutkan! Aku sembunyi dulu!";
+                    text = "HAAH?! Suara petirnya keras sekali! Aku kaget!";
                     icon = "⚡";
                     catUrl = catStormy;
                 }
@@ -263,7 +258,6 @@
                 document.getElementById('cat-img').src = catUrl;
                 const bubble = document.getElementById('mascot-text');
                 bubble.innerText = text;
-                // Efek pop kecil saat teks berubah
                 bubble.style.transform = "scale(1.1)";
                 setTimeout(() => { bubble.style.transform = "scale(1)"; }, 200);
             }
