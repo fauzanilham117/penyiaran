@@ -21,168 +21,159 @@
             transition: background 1s ease;
         }
 
-        /* --- LAYER HUJAN (CSS MURNI) --- */
+        /* --- BACKGROUND EFFECTS --- */
         .rain {
             position: absolute; left: 0; width: 100%; height: 100%; z-index: 1;
-            background-image: linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(255,255,255,0));
+            background-image: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0));
             background-size: 2px 30px; 
-            animation: rainfall 0.4s linear infinite;
-            display: none; opacity: 0.7;
+            animation: rainfall 0.3s linear infinite;
+            display: none; 
         }
         @keyframes rainfall { 0% { background-position: 0 0; } 100% { background-position: 5px 100vh; } }
 
-        /* --- LAYER AWAN (CSS MURNI) --- */
-        .clouds {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
-            background: transparent; display: none;
-        }
-        .cloud-puff {
-            position: absolute; background: rgba(255,255,255,0.4); border-radius: 50%;
-            animation: floatCloud 20s infinite linear;
-        }
-        @keyframes floatCloud { from { transform: translateX(-100px); } to { transform: translateX(110vw); } }
-
-        /* --- LAYOUT --- */
+        /* --- LAYOUT UTAMA --- */
         .container { display: flex; width: 100%; height: 100%; z-index: 2; }
 
         /* --- PANEL KIRI --- */
         .left-panel {
             width: 40%; padding: 40px; display: flex; flex-direction: column; justify-content: center;
-            background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(12px);
-            border-right: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            background: rgba(0, 0, 0, 0.25); backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(255,255,255,0.15);
         }
         .header-title {
-            font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 40px;
-            text-transform: uppercase; border-bottom: 2px solid rgba(255,255,255,0.5);
+            font-size: 1.4rem; letter-spacing: 2px; margin-bottom: 40px;
+            text-transform: uppercase; border-bottom: 2px solid rgba(255,255,255,0.4);
             padding-bottom: 15px; font-weight: bold;
         }
         .metric-box { margin-bottom: 30px; }
         .label { font-size: 0.9rem; opacity: 0.9; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;}
         .big-number {
             font-family: Arial, sans-serif; font-size: 6rem; font-weight: bold;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.3); line-height: 1;
+            text-shadow: 4px 4px 15px rgba(0,0,0,0.2); line-height: 1;
         }
         .unit { font-size: 2rem; font-weight: normal; margin-left: 10px;}
+        
         .status-pill {
             display: inline-flex; align-items: center; gap: 10px;
-            padding: 10px 25px; background: rgba(255,255,255,0.25);
+            padding: 12px 30px; background: rgba(255,255,255,0.2);
             border-radius: 50px; font-weight: bold; font-size: 1.2rem;
-            border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
         /* --- PANEL KANAN --- */
         .right-panel { width: 60%; padding: 40px; overflow-y: auto; position: relative; }
         .glass-table {
-            width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.15);
+            width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.1);
             border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         .glass-table th { background: rgba(0,0,0,0.3); padding: 15px; text-align: left; }
         .glass-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         
-        /* --- MASCOT AREA (CUSTOM ROBOT) --- */
+        /* --- MASCOT AREA (YANG DIPERBAIKI) --- */
         .mascot-wrapper {
-            position: fixed; bottom: 0; right: 50px;
+            position: fixed; bottom: 30px; right: 40px;
             display: flex; flex-direction: column; align-items: center;
             z-index: 10; pointer-events: none;
-            transition: all 0.5s ease;
         }
 
         .chat-bubble {
             background: white; color: #333; padding: 15px 25px;
             border-radius: 20px 20px 0 20px; font-weight: bold;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); margin-bottom: 15px;
             max-width: 250px; text-align: center;
-            border: 3px solid #fff;
-            position: relative; top: 0;
-            transition: all 0.3s ease;
+            position: relative; 
+            border: 4px solid #fff;
+            animation: floatBubble 3s ease-in-out infinite;
         }
 
-        /* Container Robot agar Aksesoris (Payung/Kaca Mata) bisa nempel */
-        .robot-container {
+        /* CONTAINER ROBOT (Lingkaran Keren) */
+        .robot-frame {
             position: relative;
-            width: 200px; height: 200px;
-            display: flex; justify-content: center; align-items: flex-end;
-        }
-
-        .mascot-img {
-            width: 180px; height: auto;
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
+            width: 160px; height: 160px;
+            border-radius: 50%; /* Membuat jadi bulat */
+            border: 5px solid white; /* Bingkai putih tebal */
+            background: white;
+            overflow: visible; /* Agar aksesoris bisa keluar dari lingkaran */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* Bayangan 3D */
+            display: flex; justify-content: center; align-items: center;
             transition: all 0.5s ease;
         }
 
-        /* --- AKSESORIS TAMBAHAN (Emoji Overlay) --- */
+        /* Gambar Robot dipotong bulat */
+        .mascot-img {
+            width: 100%; height: 100%;
+            object-fit: cover; /* Agar gambar pas di lingkaran */
+            border-radius: 50%;
+        }
+
+        /* --- AKSESORIS YANG DIPERBAIKI POSISINYA --- */
         .accessory {
             position: absolute;
-            font-size: 5rem;
             z-index: 20;
-            display: none; /* Default mati */
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+            display: none;
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3));
         }
 
-        /* --- ANIMASI GAYA ROBOT --- */
-        
-        /* 1. GAYA BERJEMUR (Cerah) */
-        /* Robot miring santai + Kacamata Hitam */
-        .mode-sunbathe .mascot-img {
-            transform: rotate(-15deg) translateY(10px);
-        }
-        .mode-sunbathe .accessory.glasses {
-            display: block;
-            top: 40px; left: 60px; /* Sesuaikan posisi di wajah robot */
-            font-size: 3rem;
-            transform: rotate(-15deg);
+        /* Posisi Kacamata */
+        .accessory.glasses {
+            font-size: 3.5rem;
+            top: 45px; /* Pas di mata */
         }
 
-        /* 2. GAYA PAYUNG (Hujan) */
-        /* Robot tegak + Payung di atas */
-        .mode-umbrella .mascot-img {
-            animation: shiver 0.5s infinite alternate; /* Menggigil */
-        }
-        .mode-umbrella .accessory.umbrella {
-            display: block;
-            top: -60px; left: 20px;
-            font-size: 7rem;
-            animation: floatUmbrella 2s infinite ease-in-out;
+        /* Posisi Payung (Di atas lingkaran) */
+        .accessory.umbrella {
+            font-size: 5rem;
+            top: -50px; left: -20px; /* Melayang di atas kepala */
+            transform: rotate(-10deg);
+            animation: umbrellaBob 2s infinite ease-in-out;
         }
 
-        /* 3. GAYA TERBANG (Badai) */
-        /* Robot muter-muter terbawa angin */
-        .mode-storm .robot-container {
-            animation: blownAway 3s infinite linear;
+        /* Posisi Badai (Ikon Angin) */
+        .accessory.storm {
+            font-size: 5rem;
+            bottom: -10px; right: -20px;
         }
-        .mode-storm .chat-bubble { opacity: 0; } /* Sembunyikan teks pas terbang */
 
-        @keyframes shiver { 0% { transform: translateY(0); } 100% { transform: translateY(-3px); } }
-        @keyframes floatUmbrella { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes blownAway {
-            0% { transform: translateX(0) rotate(0deg); opacity: 1; }
-            40% { transform: translateX(-50px) rotate(-20deg); opacity: 1; }
-            100% { transform: translateX(100vw) translateY(-200px) rotate(720deg); opacity: 0; }
+        /* --- ANIMASI MODE --- */
+        @keyframes umbrellaBob { 0%, 100% { transform: translateY(0) rotate(-10deg); } 50% { transform: translateY(-5px) rotate(-5deg); } }
+        @keyframes floatBubble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        /* Mode Badai: Frame bergetar */
+        .mode-storm .robot-frame {
+            animation: shake 0.5s infinite;
+            border-color: #ff4d4d;
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
             body { flex-direction: column; overflow: auto; height: auto; }
             .left-panel, .right-panel { width: 100%; height: auto; }
-            .mascot-img { width: 140px; }
-            .robot-container { width: 150px; height: 150px; }
-            .accessory.umbrella { font-size: 5rem; top: -40px; }
+            .robot-frame { width: 120px; height: 120px; }
+            .accessory.umbrella { font-size: 4rem; top: -40px; }
         }
     </style>
 </head>
 <body>
 
     <div class="rain" id="rain-layer"></div>
-    <div class="clouds" id="cloud-layer">
-        <div class="cloud-puff" style="width:100px; height:100px; top:20px; left:-50px; animation-duration:25s;"></div>
-        <div class="cloud-puff" style="width:150px; height:150px; top:50px; left:-120px; animation-duration:30s;"></div>
-        <div class="cloud-puff" style="width:80px; height:80px; top:10px; left:-200px; animation-duration:20s;"></div>
-    </div>
 
     <div class="container">
         <div class="left-panel">
-            <div class="header-title">>> MONITOR SISTEM</div>
+            <div class="header-title">>> MONITOR IOT</div>
             <div class="metric-box">
                 <div class="label">Curah Hujan Hari Ini</div>
                 <div class="big-number">
@@ -192,8 +183,8 @@
             <div class="metric-box">
                 <div class="label">Status Cuaca</div>
                 <div class="status-pill">
-                    <span id="weather-icon">🤔</span>
-                    <span id="m-cuaca">Sinkronisasi...</span>
+                    <span id="weather-icon">📡</span>
+                    <span id="m-cuaca">Menghubungkan...</span>
                 </div>
             </div>
             <div style="margin-top:auto; font-size:0.9rem; opacity:0.8;">
@@ -202,7 +193,7 @@
         </div>
 
         <div class="right-panel">
-            <h2 style="margin-bottom:20px;">Laporan Harian</h2>
+            <h2 style="margin-bottom:20px; text-shadow:0 2px 5px rgba(0,0,0,0.3);">Laporan Harian</h2>
             <table class="glass-table">
                 <thead>
                     <tr><th>Waktu</th><th>Total Hujan</th><th>Status</th></tr>
@@ -213,13 +204,14 @@
             </table>
 
             <div class="mascot-wrapper" id="mascot-wrapper">
-                <div class="chat-bubble" id="mascot-text">Halo! Saya siap memantau cuaca.</div>
+                <div class="chat-bubble" id="mascot-text">Halo! Saya Robot Cuaca.</div>
                 
-                <div class="robot-container">
+                <div class="robot-frame">
                     <div class="accessory glasses">😎</div>
                     <div class="accessory umbrella">☔</div>
+                    <div class="accessory storm">💨</div>
                     
-                    <img src="./mascot.jpg" alt="Robot Mascot" class="mascot-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4712/4712038.png'"> 
+                    <img src="./mascot.jpg" alt="Mascot" class="mascot-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4712/4712038.png'">
                 </div>
             </div>
         </div>
@@ -252,49 +244,51 @@
                 let kondisi = data.cuaca.trim();
                 document.getElementById('m-cuaca').innerText = kondisi;
 
-                // --- LOGIKA UTAMA PERUBAHAN TAMPILAN ---
+                // --- LOGIKA TAMPILAN ---
                 let wrapper = document.getElementById('mascot-wrapper');
                 let bubble = document.getElementById('mascot-text');
                 
-                // Reset Kelas Dulu
+                // Reset State
                 wrapper.className = 'mascot-wrapper'; 
                 document.getElementById('rain-layer').style.display = 'none';
-                document.getElementById('cloud-layer').style.display = 'none';
+                document.querySelector('.accessory.glasses').style.display = 'none';
+                document.querySelector('.accessory.umbrella').style.display = 'none';
+                document.querySelector('.accessory.storm').style.display = 'none';
 
                 if (kondisi.includes("Berawan") || kondisi.includes("Cerah")) {
-                    // KONDISI 1: CERAH (Berjemur)
-                    document.body.style.background = "linear-gradient(to bottom, #56CCF2, #2F80ED)"; // Biru Langit
-                    wrapper.classList.add('mode-sunbathe'); // Aktifkan mode berjemur
+                    // CERAH: Background Biru Langit, Robot Pakai Kacamata
+                    document.body.style.background = "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)";
                     
-                    document.getElementById('cloud-layer').style.display = 'block'; // Awan lewat
+                    document.querySelector('.accessory.glasses').style.display = 'block';
                     document.getElementById('weather-icon').innerText = "☀️";
-                    bubble.innerText = "Cuaca cerah! Enaknya berjemur nih 😎";
-                    bubble.style.borderColor = "#56CCF2";
+                    bubble.innerText = "Cuaca cerah! Langit bersih.";
+                    bubble.style.borderColor = "#4facfe";
                 } 
                 else if (kondisi.includes("Ringan") || kondisi.includes("Sedang")) {
-                    // KONDISI 2: HUJAN (Payung)
-                    document.body.style.background = "linear-gradient(to bottom, #616161, #9bc5c3)"; // Abu-abu sendu
-                    wrapper.classList.add('mode-umbrella'); // Aktifkan mode payung
-                    
-                    document.getElementById('rain-layer').style.display = 'block'; // Hujan turun
-                    document.getElementById('weather-icon').innerText = "🌧️";
-                    bubble.innerText = "Hujan turun.. Untung ada payung! ☔";
-                    bubble.style.borderColor = "#9bc5c3";
-                } 
-                else if (kondisi.includes("Lebat") || kondisi.includes("ekstrem")) {
-                    // KONDISI 3: BADAI (Terbang)
-                    document.body.style.background = "linear-gradient(to bottom, #232526, #414345)"; // Gelap mencekam
-                    wrapper.classList.add('mode-storm'); // Aktifkan mode terbang
+                    // HUJAN: Background Kelabu, Robot Pakai Payung
+                    document.body.style.background = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
                     
                     document.getElementById('rain-layer').style.display = 'block';
+                    document.querySelector('.accessory.umbrella').style.display = 'block';
+                    document.getElementById('weather-icon').innerText = "🌧️";
+                    bubble.innerText = "Hujan turun... Untung sedia payung!";
+                    bubble.style.borderColor = "#764ba2";
+                } 
+                else if (kondisi.includes("Lebat") || kondisi.includes("ekstrem")) {
+                    // BADAI: Background Merah Gelap, Robot Getar
+                    document.body.style.background = "linear-gradient(135deg, #434343 0%, #000000 100%)";
+                    wrapper.classList.add('mode-storm');
+                    
+                    document.getElementById('rain-layer').style.display = 'block';
+                    document.querySelector('.accessory.storm').style.display = 'block';
                     document.getElementById('weather-icon').innerText = "🌪️";
-                    bubble.innerText = "WAAAAA! ANGINNYA KENCANG SEKALI!!!";
+                    bubble.innerText = "BAHAYA! Angin kencang & Hujan Lebat!";
                     bubble.style.borderColor = "#ff4d4d";
                 }
             }
         });
 
-        // DATA TABEL
+        // TABEL
         onValue(ref(db, 'riwayat_hujan'), (snapshot) => {
             const data = snapshot.val();
             const tbody = document.getElementById('tabel-body');
