@@ -17,7 +17,7 @@
             overflow: hidden;
             color: white;
             display: flex;
-            background: #333; /* Default sementara loading */
+            background: #333;
             transition: background 1s ease;
         }
 
@@ -31,14 +31,26 @@
         }
         @keyframes rainfall { 0% { background-position: 0 0; } 100% { background-position: 5px 100vh; } }
 
+        /* --- LAYER AWAN (CSS MURNI) --- */
+        .clouds {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+            background: transparent; display: none;
+        }
+        .cloud-puff {
+            position: absolute; background: rgba(255,255,255,0.4); border-radius: 50%;
+            animation: floatCloud 20s infinite linear;
+        }
+        @keyframes floatCloud { from { transform: translateX(-100px); } to { transform: translateX(110vw); } }
+
         /* --- LAYOUT --- */
         .container { display: flex; width: 100%; height: 100%; z-index: 2; }
 
         /* --- PANEL KIRI --- */
         .left-panel {
             width: 40%; padding: 40px; display: flex; flex-direction: column; justify-content: center;
-            background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(12px);
             border-right: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.2);
         }
         .header-title {
             font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 40px;
@@ -68,74 +80,105 @@
         .glass-table th { background: rgba(0,0,0,0.3); padding: 15px; text-align: left; }
         .glass-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         
-        /* --- MASCOT AREA BARU (DENGAN ANIMASI CANGGIH) --- */
+        /* --- MASCOT AREA (CUSTOM ROBOT) --- */
         .mascot-wrapper {
-            position: fixed; bottom: 30px; right: 40px; /* Digeser sedikit ke kiri agar tidak terlalu mepet saat animasi */
-            display: flex; flex-direction: column; align-items: flex-end;
+            position: fixed; bottom: 0; right: 50px;
+            display: flex; flex-direction: column; align-items: center;
             z-index: 10; pointer-events: none;
+            transition: all 0.5s ease;
         }
 
         .chat-bubble {
             background: white; color: #333; padding: 15px 25px;
             border-radius: 20px 20px 0 20px; font-weight: bold;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 15px;
-            max-width: 280px; text-align: right;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 10px;
+            max-width: 250px; text-align: center;
             border: 3px solid #fff;
+            position: relative; top: 0;
             transition: all 0.3s ease;
         }
 
-        /* Style Gambar Mascot */
+        /* Container Robot agar Aksesoris (Payung/Kaca Mata) bisa nempel */
+        .robot-container {
+            position: relative;
+            width: 200px; height: 200px;
+            display: flex; justify-content: center; align-items: flex-end;
+        }
+
         .mascot-img {
-            width: 180px; /* Ukuran default */
-            height: auto;
-            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.4));
-            transition: all 0.5s ease; /* Transisi halus saat ganti gambar */
+            width: 180px; height: auto;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
+            transition: all 0.5s ease;
         }
 
-        /* --- DEFINISI ANIMASI KARAKTER --- */
-
-        /* 1. Animasi Berjemur (Santai Mengayun) */
-        @keyframes relaxFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(3deg); }
+        /* --- AKSESORIS TAMBAHAN (Emoji Overlay) --- */
+        .accessory {
+            position: absolute;
+            font-size: 5rem;
+            z-index: 20;
+            display: none; /* Default mati */
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
         }
 
-        /* 2. Animasi Pakai Payung (Menggigil/Bergoyang kena hujan) */
-        @keyframes rainShiver {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-3px) rotate(-2deg); }
-            50% { transform: translateX(0) translateY(3px); }
-            75% { transform: translateX(3px) rotate(2deg); }
-            100% { transform: translateX(0); }
+        /* --- ANIMASI GAYA ROBOT --- */
+        
+        /* 1. GAYA BERJEMUR (Cerah) */
+        /* Robot miring santai + Kacamata Hitam */
+        .mode-sunbathe .mascot-img {
+            transform: rotate(-15deg) translateY(10px);
+        }
+        .mode-sunbathe .accessory.glasses {
+            display: block;
+            top: 40px; left: 60px; /* Sesuaikan posisi di wajah robot */
+            font-size: 3rem;
+            transform: rotate(-15deg);
         }
 
-        /* 3. Animasi Terbawa Angin (Dramatis Berputar & Terbang) */
-        @keyframes blownAwayLoop {
-            0% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 1;}
-            80% { transform: translateX(400px) translateY(-200px) rotate(360deg); opacity: 0;}
-            81% { transform: translateX(-100px) translateY(0) rotate(0deg); opacity: 0; } /* Reset posisi diam-diam */
-            100% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 1; } /* Muncul lagi */
+        /* 2. GAYA PAYUNG (Hujan) */
+        /* Robot tegak + Payung di atas */
+        .mode-umbrella .mascot-img {
+            animation: shiver 0.5s infinite alternate; /* Menggigil */
+        }
+        .mode-umbrella .accessory.umbrella {
+            display: block;
+            top: -60px; left: 20px;
+            font-size: 7rem;
+            animation: floatUmbrella 2s infinite ease-in-out;
+        }
+
+        /* 3. GAYA TERBANG (Badai) */
+        /* Robot muter-muter terbawa angin */
+        .mode-storm .robot-container {
+            animation: blownAway 3s infinite linear;
+        }
+        .mode-storm .chat-bubble { opacity: 0; } /* Sembunyikan teks pas terbang */
+
+        @keyframes shiver { 0% { transform: translateY(0); } 100% { transform: translateY(-3px); } }
+        @keyframes floatUmbrella { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes blownAway {
+            0% { transform: translateX(0) rotate(0deg); opacity: 1; }
+            40% { transform: translateX(-50px) rotate(-20deg); opacity: 1; }
+            100% { transform: translateX(100vw) translateY(-200px) rotate(720deg); opacity: 0; }
         }
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
             body { flex-direction: column; overflow: auto; height: auto; }
             .left-panel, .right-panel { width: 100%; height: auto; }
-            .mascot-img { width: 130px; }
-            .chat-bubble { font-size: 0.85rem; max-width: 200px; }
-            /* Sesuaikan animasi terbang untuk layar kecil agar tidak terlalu jauh */
-            @keyframes blownAwayLoop {
-                0% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 1;}
-                80% { transform: translateX(200px) translateY(-100px) rotate(360deg); opacity: 0;}
-                81% { transform: translateX(-50px) translateY(0) rotate(0deg); opacity: 0; }
-                100% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 1; }
-            }
+            .mascot-img { width: 140px; }
+            .robot-container { width: 150px; height: 150px; }
+            .accessory.umbrella { font-size: 5rem; top: -40px; }
         }
     </style>
 </head>
 <body>
 
     <div class="rain" id="rain-layer"></div>
+    <div class="clouds" id="cloud-layer">
+        <div class="cloud-puff" style="width:100px; height:100px; top:20px; left:-50px; animation-duration:25s;"></div>
+        <div class="cloud-puff" style="width:150px; height:150px; top:50px; left:-120px; animation-duration:30s;"></div>
+        <div class="cloud-puff" style="width:80px; height:80px; top:10px; left:-200px; animation-duration:20s;"></div>
+    </div>
 
     <div class="container">
         <div class="left-panel">
@@ -169,9 +212,15 @@
                 </tbody>
             </table>
 
-            <div class="mascot-wrapper">
-                <div class="chat-bubble" id="mascot-text">Sistem siap! Menunggu data cuaca...</div>
-                <img id="mascot-img" class="mascot-img" src="https://cdn-icons-png.flaticon.com/512/4712/4712038.png" alt="Mascot Character">
+            <div class="mascot-wrapper" id="mascot-wrapper">
+                <div class="chat-bubble" id="mascot-text">Halo! Saya siap memantau cuaca.</div>
+                
+                <div class="robot-container">
+                    <div class="accessory glasses">😎</div>
+                    <div class="accessory umbrella">☔</div>
+                    
+                    <img src="./mascot.jpg" alt="Robot Mascot" class="mascot-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4712/4712038.png'"> 
+                </div>
             </div>
         </div>
     </div>
@@ -194,14 +243,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- LINK GAMBAR MASCOT STABIL (FLATICON PNG) ---
-        // 1. Robot Santai di Kursi Pantai (Cerah)
-        const mascotRelax = "https://cdn-icons-png.flaticon.com/512/3662/3662819.png";
-        // 2. Robot Pegang Payung (Hujan Ringan)
-        const mascotUmbrella = "https://cdn-icons-png.flaticon.com/512/3662/3662939.png";
-        // 3. Robot Panik Terbang (Hujan Lebat) - Kita pakai ikon roket/terbang sebagai representasi
-        const mascotFlying = "https://cdn-icons-png.flaticon.com/512/3662/3662848.png";
-
         onValue(ref(db, 'monitoring'), (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -211,64 +252,49 @@
                 let kondisi = data.cuaca.trim();
                 document.getElementById('m-cuaca').innerText = kondisi;
 
-                // --- LOGIKA PENGENDALI MASCOT & BACKGROUND ---
-                let bgStyle, rainDisplay, emojiIcon;
-                let mascotSrc, mascotText, mascotAnim;
-                let bubbleBorderColor;
+                // --- LOGIKA UTAMA PERUBAHAN TAMPILAN ---
+                let wrapper = document.getElementById('mascot-wrapper');
+                let bubble = document.getElementById('mascot-text');
+                
+                // Reset Kelas Dulu
+                wrapper.className = 'mascot-wrapper'; 
+                document.getElementById('rain-layer').style.display = 'none';
+                document.getElementById('cloud-layer').style.display = 'none';
 
                 if (kondisi.includes("Berawan") || kondisi.includes("Cerah")) {
                     // KONDISI 1: CERAH (Berjemur)
-                    bgStyle = "linear-gradient(to bottom, #4facfe, #00f2fe)"; // Biru Pantai Cerah
-                    rainDisplay = "none";
-                    emojiIcon = "☀️";
+                    document.body.style.background = "linear-gradient(to bottom, #56CCF2, #2F80ED)"; // Biru Langit
+                    wrapper.classList.add('mode-sunbathe'); // Aktifkan mode berjemur
                     
-                    mascotSrc = mascotRelax;
-                    mascotText = "Aaah, cuaca cerah! Waktunya berjemur santai.";
-                    mascotAnim = "relaxFloat 3s ease-in-out infinite"; // Animasi mengayun pelan
-                    bubbleBorderColor = "#00f2fe";
+                    document.getElementById('cloud-layer').style.display = 'block'; // Awan lewat
+                    document.getElementById('weather-icon').innerText = "☀️";
+                    bubble.innerText = "Cuaca cerah! Enaknya berjemur nih 😎";
+                    bubble.style.borderColor = "#56CCF2";
                 } 
                 else if (kondisi.includes("Ringan") || kondisi.includes("Sedang")) {
-                    // KONDISI 2: HUJAN (Pakai Payung)
-                    bgStyle = "linear-gradient(to bottom, #5B6E82, #839CB5)"; // Kelabu Hujan
-                    rainDisplay = "block"; // Hujan ON
-                    emojiIcon = "☔";
-
-                    mascotSrc = mascotUmbrella;
-                    mascotText = "Hujan turun nih. Untung saya sedia payung!";
-                    mascotAnim = "rainShiver 0.5s linear infinite"; // Animasi menggigil/bergoyang
-                    bubbleBorderColor = "#839CB5";
+                    // KONDISI 2: HUJAN (Payung)
+                    document.body.style.background = "linear-gradient(to bottom, #616161, #9bc5c3)"; // Abu-abu sendu
+                    wrapper.classList.add('mode-umbrella'); // Aktifkan mode payung
+                    
+                    document.getElementById('rain-layer').style.display = 'block'; // Hujan turun
+                    document.getElementById('weather-icon').innerText = "🌧️";
+                    bubble.innerText = "Hujan turun.. Untung ada payung! ☔";
+                    bubble.style.borderColor = "#9bc5c3";
                 } 
                 else if (kondisi.includes("Lebat") || kondisi.includes("ekstrem")) {
-                    // KONDISI 3: BADAI (Terbawa Angin)
-                    bgStyle = "linear-gradient(to bottom, #2c3e50, #1a1a1a)"; // Gelap Badai Mencekam
-                    rainDisplay = "block"; // Hujan ON
-                    emojiIcon = "🌪️";
-
-                    mascotSrc = mascotFlying;
-                    mascotText = "WAAAAA! ANGINNYA KENCANG SEKALI! TOLOOONG!";
-                    // Animasi dramatis terbang berputar keluar layar dan loop lagi
-                    mascotAnim = "blownAwayLoop 2.5s ease-in infinite"; 
-                    bubbleBorderColor = "#ff4d4d"; // Merah bahaya
+                    // KONDISI 3: BADAI (Terbang)
+                    document.body.style.background = "linear-gradient(to bottom, #232526, #414345)"; // Gelap mencekam
+                    wrapper.classList.add('mode-storm'); // Aktifkan mode terbang
+                    
+                    document.getElementById('rain-layer').style.display = 'block';
+                    document.getElementById('weather-icon').innerText = "🌪️";
+                    bubble.innerText = "WAAAAA! ANGINNYA KENCANG SEKALI!!!";
+                    bubble.style.borderColor = "#ff4d4d";
                 }
-
-                // --- TERAPKAN KE ELEMEN HTML ---
-                document.body.style.background = bgStyle;
-                document.getElementById('rain-layer').style.display = rainDisplay;
-                document.getElementById('weather-icon').innerText = emojiIcon;
-                
-                // Update Mascot
-                const mascotImgEl = document.getElementById('mascot-img');
-                mascotImgEl.src = mascotSrc;
-                mascotImgEl.style.animation = mascotAnim; // Terapkan animasi CSS yang sesuai
-
-                // Update Bubble Text & Color
-                const bubbleEl = document.getElementById('mascot-text');
-                bubbleEl.innerText = mascotText;
-                bubbleEl.style.borderColor = bubbleBorderColor;
             }
         });
 
-        // TABEL
+        // DATA TABEL
         onValue(ref(db, 'riwayat_hujan'), (snapshot) => {
             const data = snapshot.val();
             const tbody = document.getElementById('tabel-body');
