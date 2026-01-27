@@ -202,9 +202,11 @@
         // --- ASSET LINK BARU (MATAHARI & AWAN HUJAN) ---
         
         // Ikon Matahari Cerah
-        const iconSun = "https://cdn-icons-png.flaticon.com/512/869/869869.png";
+        const iconSun = "/img/cerah.png";
         // Ikon Awan Hujan (Dipakai untuk semua jenis hujan)
-        const iconRain = "/img/deras.png";
+        const icongerimis = "/img/gerimis.png";
+        const iconlebat  = "/img/deras.png";
+        const iconekstrem = "/img/ekstrem.png";
 
         // Background HD (Tetap sama)
         const bgCerah = "https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1920&auto=format&fit=crop"; 
@@ -231,21 +233,21 @@
                     urlBg = bgCerah;
                     text = "Hari yang cerah! Waktunya menikmati sinar matahari.";
                     icon = "😎";
-                    mascotUrl = iconSun;
+                    mascotUrl = icongerimis;
                 } 
                 else if (kondisi.includes("Ringan") || kondisi.includes("Sedang")) {
                     // HUJAN: Awan Hujan
                     urlBg = bgHujan;
                     text = "Sedang turun hujan. Jangan lupa bawa payung!";
                     icon = "☔";
-                    mascotUrl = iconRain;
+                    mascotUrl = iconlebat;
                 } 
                 else if (kondisi.includes("Lebat") || kondisi.includes("ekstrem")) {
                     // BADAI: Awan Hujan (Teks lebih serius)
                     urlBg = bgBadai;
                     text = "Waspada! Hujan lebat dan potensi badai!";
                     icon = "⚡";
-                    mascotUrl = iconRain; // Tetap pakai awan hujan
+                    mascotUrl = iconekstrem; // Tetap pakai awan hujan
                 }
 
                 // Update Tampilan
@@ -278,4 +280,5 @@
 </body>
 
 </html>
+
 
