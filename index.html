@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +9,16 @@
     <style>
         /* --- RESET --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
+        .realtime-clock {
+            font-family: Arial, sans-serif; 
+            font-size: 4rem; 
+            font-weight: bold;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5); 
+            line-height: 1;
+            color: #f1f2f6; /* Warna putih sedikit redup agar nyaman di mata */
+            letter-spacing: 2px;
+        }
+
         body { 
             font-family: 'Quicksand', sans-serif;
             height: 100vh; overflow: hidden; color: white;
@@ -145,7 +153,10 @@
 
     <div class="container">
         <div class="left-panel">
-            <div class="header-title">>> MONITOR CUACA</div>
+            <div style="margin-bottom: 30px;">
+                <div class="label">Waktu Saat Ini</div>
+                <div class="realtime-clock" id="jam-realtime">00:00</div>
+            </div>            <div class="header-title">>> MONITOR CUACA</div>
             <div style="margin-bottom: 30px;">
                 <div class="label">Curah Hujan</div>
                 <div class="big-number">
@@ -276,9 +287,23 @@
                 });
             } else { tbody.innerHTML = "<tr><td colspan='3'>Belum ada data.</td></tr>"; }
         });
+
+        function updateClock() {
+            const now = new Date();
+            // Ambil jam dan menit, format menjadi 2 digit (contoh: 09, bukan 9)
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            // Masukkan ke elemen HTML
+            document.getElementById('jam-realtime').innerText = `${hours}:${minutes}`;
+        }
+
+        // Jalankan fungsi updateClock setiap 1000 milidetik (1 detik)
+        setInterval(updateClock, 1000);
+        
+        // Panggil fungsi sekali di awal agar jam langsung muncul tanpa menunggu 1 detik
+        updateClock();
     </script>
 </body>
 
 </html>
-
-
