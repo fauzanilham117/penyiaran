@@ -174,7 +174,12 @@
         </div>
 
         <div class="right-panel">
-            <h2 style="margin-bottom:20px;">Laporan Harian</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Laporan Harian</h2>
+                <button id="btn-export" style="padding: 8px 15px; background: rgba(40, 167, 69, 0.8); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; cursor: pointer; font-weight: bold; backdrop-filter: blur(5px); transition: 0.3s; z-index: 100;">
+                    📥 Unduh Excel
+                </button>
+            </div>
             <table class="glass-table">
                 <thead><tr><th>Waktu</th><th>Total</th><th>Status</th></tr></thead>
                 <tbody id="tabel-body"><tr><td colspan="3">Menunggu data...</td></tr></tbody>
@@ -209,7 +214,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-
+        let dataExportGlobal = []; // Variabel penyimpan data untuk Excel
         // --- ASSET LINK BARU (MATAHARI & AWAN HUJAN) ---
         
         // Ikon Matahari Cerah
@@ -274,18 +279,24 @@
             }
         });
 
-        // TABEL (Tetap Sama)
+// TABEL & SIAPKAN DATA EXCEL
         onValue(ref(db, 'riwayat_hujan'), (snapshot) => {
             const data = snapshot.val();
             const tbody = document.getElementById('tabel-body');
             tbody.innerHTML = ""; 
+            dataExportGlobal = []; // Kosongkan data lama
+
             if (data) {
                 let dataArray = Object.keys(data).map(k => data[k]).reverse();
+                dataExportGlobal = dataArray; // Simpan data untuk diunduh
+
                 dataArray.forEach(item => {
                     let row = `<tr><td>${item.waktu}</td><td>${item.curah_hujan_hari_ini} mm</td><td>${item.cuaca}</td></tr>`;
                     tbody.innerHTML += row;
                 });
-            } else { tbody.innerHTML = "<tr><td colspan='3'>Belum ada data.</td></tr>"; }
+            } else { 
+                tbody.innerHTML = "<tr><td colspan='3'>Belum ada data.</td></tr>"; 
+            }
         });
 
         function updateClock() {
@@ -303,6 +314,39 @@
         
         // Panggil fungsi sekali di awal agar jam langsung muncul tanpa menunggu 1 detik
         updateClock();
+        // FUNGSI KLIK TOMBOL UNDUH EXCEL (CSV)
+        document.getElementById('btn-export').addEventListener('click', () => {
+            if (dataExportGlobal.length === 0) {
+                alert("Belum ada data untuk diunduh!");
+                return;
+            }
+
+            // Buat nama file otomatis dengan tanggal hari ini
+            const now = new Date();
+            const tglBulanTahun = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth()+1).padStart(2, '0')}-${now.getFullYear()}`;
+            const namaFile = `Laporan_Curah_Hujan_${tglBulanTahun}.csv`;
+
+            // Buat Judul Kolom (Header)
+            let csvContent = "Tanggal,Waktu,Curah Hujan (mm),Cuaca\n";
+
+            // Masukkan data dari Firebase
+            dataExportGlobal.forEach(item => {
+                let tglData = item.tanggal || tglBulanTahun; // Jika ada properti tanggal di firebase pakai itu, jika tidak pakai hari ini
+                csvContent += `${tglData},${item.waktu},${item.curah_hujan_hari_ini},${item.cuaca}\n`;
+            });
+
+            // Proses Download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", namaFile);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
     </script>
 </body>
 
